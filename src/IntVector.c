@@ -2,6 +2,7 @@
 
 IntVector *int_vector_new(size_t init_capacity) {
     IntVector *vect = (IntVector*)malloc(sizeof(vect));
+    printf("%ld\n", sizeof(vect));
     vect->arr = (int*)malloc(init_capacity*sizeof(int));
     vect->size = 0;
     vect->capacity = init_capacity;
@@ -37,17 +38,16 @@ size_t int_vector_get_capacity(const IntVector *v) {
     return v->capacity;
 }
 
-int int_vector_push_back(IntVector *v, int item) {                //Добавление элемента в конец массива
+int int_vector_push_back(IntVector *v, int item) { 
 
     if (v->capacity == 0) {
         printf("ADDITION FAILED\n");
         exit(-1);
-    } else if (v->size < v->capacity)
-    {
+    } else if (v->size < v->capacity) {
         v->arr[v->size] = item;
         ++(v->size);
         return 0;
-    } else if (v->size >= v->capacity) {                        // >= потому, что индексация начинается с нуля, и фактически по адресу == capacity элемента нет.
+    } else if (v->size >= v->capacity) {                        
         int_vector_reserve(v, 2*(v->capacity));
         int_vector_push_back(v, item);
     }
@@ -58,21 +58,25 @@ int int_vector_push_back(IntVector *v, int item) {                //Добавл
 void int_vector_pop_back(IntVector *v) {
     if (v->size != 0) 
     {
-        //delete
+        v->arr[v->size - 1] = 0;
         (v->size)--;
     }
 
 }
 
 int int_vector_shrink_to_fit(IntVector *v) {
-    if (v != NULL && v->capacity != 0)
+    if (v != NULL)
     {
         v->arr = (int*)realloc(v->arr, v->size*sizeof(int));
         v->capacity = v->size;
         return 0; 
 
-    } else
+    }
+
+    if (v->arr == NULL)
         return -1;
+
+    return 0;
 }
 
 int int_vector_resize(IntVector *v, size_t new_size) {
@@ -88,7 +92,6 @@ int int_vector_resize(IntVector *v, size_t new_size) {
     } else if (new_size < v->size) {
         v->size = new_size;
         int_vector_shrink_to_fit(v);
-        // int_vector_reserve(v, new_size);
         return 0;
     } else if (new_size > v->size && new_size < v->capacity) {
         size_t temp_size = v->size;
@@ -115,5 +118,5 @@ int int_vector_reserve(IntVector *v, size_t new_capacity) {
 
 void int_vector_free(IntVector *v) {
     free(v->arr);
-    v->size = v->capacity = 0;
+    free(v);
 }

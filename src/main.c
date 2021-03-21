@@ -2,11 +2,11 @@
 
 int main() {
 
-    static size_t /*index, size, capacity,*/ init_capacity = 10;
+    static size_t  init_capacity = 10;
     // int item = 4;
 
     IntVector *v = NULL;
-    // IntVector *v_copy = NULL;
+    IntVector *v_copy = NULL;
 
     v = int_vector_new(init_capacity);
 
@@ -25,12 +25,6 @@ int main() {
 
     printf("\nSIZE_VECTOR : %d\nCAPACITY_VECTOR : %d\n", v->size, v->capacity);
 
-    v = int_vector_new(init_capacity);
-
-    int_vector_free(v);
-
-    printf("\nSIZE_VECTOR : %d\nCAPACITY_VECTOR : %d\n", v->size, v->capacity);
-
     int_vector_push_back(v, 24);
     
     int_vector_resize(v, 15);
@@ -38,6 +32,8 @@ int main() {
     int_vector_push_back(v, 24);
 
     printf("\nSIZE_VECTOR : %d\nCAPACITY_VECTOR : %d\n", v->size, v->capacity);
+
+    int_vector_free(v);
 
     return 0;
 }
