@@ -13,7 +13,16 @@ IntVector *int_vector_new(size_t init_capacity) {
 }
 
 IntVector *int_vector_copy(const IntVector *v) {
-    IntVector *vect_copy = (IntVector*)v;
+    IntVector *vect_copy = NULL;
+    vect_copy = int_vector_new(v->capacity);
+    vect_copy->capacity = v->capacity;
+    vect_copy->size = v->size;
+
+    for (int j = 0; j < v->size; j++)
+    {
+        vect_copy->arr[j] = v->arr[j];
+    }
+    
     if (vect_copy != NULL)
         return vect_copy;
     else    
@@ -70,7 +79,6 @@ int int_vector_shrink_to_fit(IntVector *v) {
         v->arr = (int*)realloc(v->arr, v->size*sizeof(int));
         v->capacity = v->size;
         return 0; 
-
     }
 
     if (v->arr == NULL)
@@ -88,6 +96,7 @@ int int_vector_resize(IntVector *v, size_t new_size) {
         {
             v->arr[i] = 0;
         }
+        v->size = new_size;
         return 0;
     } else if (new_size < v->size) {
         v->size = new_size;
@@ -100,6 +109,7 @@ int int_vector_resize(IntVector *v, size_t new_size) {
         {
             v->arr[i] = 0;
         }
+        v->size = new_size;
         return 0;
     } else
         return -1;
