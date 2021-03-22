@@ -1,2 +1,2 @@
 all :
-	gcc -Wall -o intvector src/main.c src/IntVector.c
+	gcc -Wall -o vector main.c IntVector.c
