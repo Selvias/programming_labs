@@ -70,7 +70,7 @@ int main() {
     int_vector_resize(v, 0);
   }
 
-    printf("CAP_TEST : %d\n", v->capacity);
+    printf("\nCAP_TEST : %d\n", v->capacity);
 
   // 10.2. Добавление элемента в конец массива
   if (v != NULL) {
