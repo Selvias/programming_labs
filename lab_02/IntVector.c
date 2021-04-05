@@ -138,8 +138,15 @@ int int_vector_resize(IntVector *v, size_t new_size) {
 
 int int_vector_reserve(IntVector *v, size_t new_capacity) {
 
+  int *check = NULL;
+
   if (v != NULL && new_capacity > v->capacity && new_capacity > 0) {
-    v->arr = (int *)realloc(v->arr, new_capacity * sizeof(int));
+    
+    check = (int *)realloc(v->arr, new_capacity * sizeof(int));
+
+    if (check != NULL)
+      v->arr = check;
+    
     if (v->arr == NULL)
       return -1;
     v->capacity = new_capacity;
