@@ -27,19 +27,9 @@ int main () {
         fprintf(out_uncompressed, "%d\n", digit = generate_number());   //Вызов генерации числа    
 
         int sz = encode_varint(digit, buffer);  
-
-        // for (int t = 0; t < 4; t++)
-        // {
-        //     printf("BYTE : %d ", buffer[t]);
-        //     if (t == 3)
-        //         printf("\n");
-        // }
-        printf("SZ : %d\n", sz);
         const uint8_t* cur = buffer;
         uint8_t byte = *cur++;
-        // value = byte;
         size_t shift = 8*(sz - 1);
-        printf("SHIFT : %d ", shift);
         while (byte >= 128) {
             value += (((uint32_t)byte) << shift);
             byte = *cur++;
@@ -59,10 +49,36 @@ int main () {
     out_compressed = fopen("compressed.dat", "r");
     out_decompressed = fopen("decompressed.dat", "w");
 
+
     for (int i = 0; i < 100; i++) {
-        const uint8_t *val = (uint8_t*)calloc(4, sizeof(uint8_t));
-        fscanf(out_compressed, "%hhd", val);
-        uint32_t uncode = decode_varint(&val);
+        uint32_t scan;
+        uint8_t **val = (uint8_t**)malloc(sizeof(uint8_t*));
+        *val = (uint8_t*)calloc(4, sizeof(uint8_t));
+        fscanf(out_compressed, "%d", &scan);
+
+        int shift_dec = 24;
+        int counter = 0;
+        const uint32_t scan_cp = scan;
+        uint8_t temp;
+
+        for (int m = 0; m < 4; m++) {
+            if ((temp = (uint32_t)scan_cp >> shift_dec) != 0) {
+                (*val)[counter] = (uint8_t)temp;
+                counter++;
+            }
+            shift_dec -= 8;
+        }
+
+        const uint8_t **val_cp = (const uint8_t**)val;
+
+        // for (int t = 0; t < 4; t++)
+        // {
+        //     printf("BYTE : %hd ", (*val)[t]);
+        //     if (t == 3)
+        //         printf("\n");
+        // }
+
+        uint32_t uncode = decode_varint(val_cp);
         fprintf(out_decompressed, "%u\n", uncode);
     }
 
