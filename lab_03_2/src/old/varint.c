@@ -61,6 +61,7 @@ int main () {
     fclose(out_decompressed);
 
     free(val);
+    // free(*val);
     free(size_x);
     free(buffer);
 
