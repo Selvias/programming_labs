@@ -10,6 +10,11 @@ uint32_t generate_number();
 
 int main () {
 
+    int count = 100;
+
+    unsigned short int *size_x;
+    size_x = (unsigned short int *)calloc(count, sizeof(unsigned short int));
+
     uint8_t* buffer = NULL;                                             //Выделить память
     buffer = (uint8_t*)malloc(4*sizeof(uint8_t)); 
     FILE *out_uncompressed;    
@@ -20,27 +25,15 @@ int main () {
     out_compressed = fopen("compressed.dat", "w");
 
     uint32_t digit = 0;
-    uint32_t value= 0;
 
     for (int i = 0; i < 100; i++) {
 
         fprintf(out_uncompressed, "%d\n", digit = generate_number());   //Вызов генерации числа    
 
         int sz = encode_varint(digit, buffer);  
-        const uint8_t* cur = buffer;
-        uint8_t byte = *cur++;
-        size_t shift = 8*(sz - 1);
-        while (byte >= 128) {
-            value += (((uint32_t)byte) << shift);
-            byte = *cur++;
-            shift -= 8;
-        }
-        value += byte;
+        size_x[i] = sz;
 
-        fprintf(out_compressed, "%d\n", value);                       //Запись в файл с учётом использованного количества байт (Возвращаемое кодировщиком значение)
-            for (int d = 0; d < 4; d++)
-                buffer[d] = 0;
-            value = 0;
+        fwrite(buffer, 1, sz, out_compressed);
     }
 
     fclose(out_uncompressed);
@@ -49,43 +42,28 @@ int main () {
     out_compressed = fopen("compressed.dat", "r");
     out_decompressed = fopen("decompressed.dat", "w");
 
+    uint8_t **val = (uint8_t**)malloc(sizeof(uint8_t*));
+
+    const uint8_t **val_cp = (const uint8_t**)val;
 
     for (int i = 0; i < 100; i++) {
-        uint32_t scan;
-        uint8_t **val = (uint8_t**)malloc(sizeof(uint8_t*));
-        *val = (uint8_t*)calloc(4, sizeof(uint8_t));
-        fscanf(out_compressed, "%d", &scan);
 
-        int shift_dec = 24;
-        int counter = 0;
-        const uint32_t scan_cp = scan;
-        uint8_t temp;
+        *val = (uint8_t*)malloc(size_x[i]*sizeof(uint8_t));
 
-        for (int m = 0; m < 4; m++) {
-            if ((temp = (uint32_t)scan_cp >> shift_dec) != 0) {
-                (*val)[counter] = (uint8_t)temp;
-                counter++;
-            }
-            shift_dec -= 8;
-        }
-
-        const uint8_t **val_cp = (const uint8_t**)val;
-
-        // for (int t = 0; t < 4; t++)
-        // {
-        //     printf("BYTE : %hd ", (*val)[t]);
-        //     if (t == 3)
-        //         printf("\n");
-        // }
+        fread(*val, 1, size_x[i], out_compressed);
 
         uint32_t uncode = decode_varint(val_cp);
         fprintf(out_decompressed, "%u\n", uncode);
+
     }
 
     fclose(out_compressed);
     fclose(out_decompressed);
 
+    free(val);
+    free(size_x);
     free(buffer);
+
     return 0;
 }
 
@@ -102,7 +80,6 @@ size_t encode_varint(uint32_t value, uint8_t* buf)
     }             
     *cur = value;                                
     ++cur;                                               
-    // buf = (uint8_t*)realloc(buf, (cur - buf)*(sizeof(uint8_t)));
     return cur - buf;                                        
 }
 
@@ -118,7 +95,6 @@ uint32_t decode_varint(const uint8_t** bufp)
         shift += 7;
     }
     *bufp = cur;
-    // printf("VAL : %d\n", value);
     return value;
 }
 
