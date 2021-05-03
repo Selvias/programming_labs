@@ -17,5 +17,7 @@ int main () {
 
     printf("RESULT : %d %d\n", sum, sum_2);
 
+    free(source);
+
     return 0;
 }
