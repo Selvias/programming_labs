@@ -9,10 +9,10 @@ int main () {
 
     int rez;
 
-    rez = fibrec(num - 1);
+    rez = fibrec(num);
     printf("REC_RESULT : %d\n", rez);
 
-    rez = fibiter(num - 1, x, y);
+    rez = fibiter(num, x, y);
     printf("ITER_RESULT : %d\n", rez);
 
     return 0;
