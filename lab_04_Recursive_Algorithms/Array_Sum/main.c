@@ -12,7 +12,10 @@ int main () {
 
     int sum = rec_arr_sum (source, 10 - 1);
 
-    printf("RESULT : %d\n", sum);
+    int sum_2;
+    iter_arr_sum (source, 10 - 1, &sum_2);
+
+    printf("RESULT : %d %d\n", sum, sum_2);
 
     return 0;
 }
