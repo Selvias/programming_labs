@@ -2,21 +2,17 @@
 
 int main() {
 
-    char fbs[8] = {':', '*', '?', '"', '<', '>', '|', '\0'};
-    //char fbs_name[9] = {'\\', '/', ':', '*', '?', '"', '<', '>', '|'};
+    char fbs[10] = {'/', '\\',':', '*', '?', '"', '<', '>', '|', '\0'};
+    char **subst = (char **)malloc(1024*sizeof(char *));
 
     char *path = (char *)malloc(1024*sizeof(char));
 
     input(&path);
-    int fc = check(path, fbs);
 
-    if (fc < 0)
-        printf("Too many characters.\n");
-    else if (fc > 0)
-        printf("The path contains forbidden characters.\n");
+    process(path, subst, fbs);
 
-    putstring(path);
-    // printf("\n");
+    free(subst);
+    free(path);
     
     return 0;
 }
