@@ -31,6 +31,11 @@ void putstring(char *str, int count) {
 }
 //Заполнение структуры токенов
 void divide(char *str, toks **token, int num) {
+
+    if ((*token)[num].sizeflag == -1) {
+        return;
+    }
+
     int i = 0;
 
     ((*token)[num]).protocol[2] = '\0';
@@ -59,6 +64,11 @@ void divide(char *str, toks **token, int num) {
 
 //Проверка на домен
 int onlyletters(toks *token) {
+
+    if ((*token).sizeflag == -1) {
+        return -1;
+    }
+
     for (int i = 0; i < token->nnodes; i++) {
         for (int j = 0; token->ntoks[i][j] != '\0'; j++) {
             if ((*token).ntoks[i][j] > 'z' || token->ntoks[i][j] < 'a')
@@ -71,6 +81,11 @@ int onlyletters(toks *token) {
 
 //Проверка на IP
 int onlynumbers(toks *token) {
+
+    if ((*token).sizeflag == -1) {
+        return -1;
+    }
+
     for (int i = 0; i < token->nnodes; i++) {
         for (int j = 0; token->ntoks[i][j] != '\0'; j++) {
             if ((*token).ntoks[i][j] > '9' || token->ntoks[i][j] < '0')

@@ -5,12 +5,13 @@
 enum {
     MAX_PATH = 260,
     NODE = 30,
-    TONUM = 48
+    TONUM = 48,
+    PATHMAXLEN = 260
 };
 
 typedef struct {
 
-    short int flag;
+    short int flag, sizeflag;
 
     char protocol[3];
 

@@ -19,6 +19,19 @@ int process(char *str, char *fbs) {
 
     stok(str, '+', subst);
 
+    for (int y = 0; y < scount; y++) {
+        int size = slen(subst[y]);
+        if (size > PATHMAXLEN) {
+            (*tokens)[y].sizeflag = -1;
+        }
+    }
+
+    for (int y = 0; y < scount; y++) {
+        if ((*tokens)[y].sizeflag == -1) {
+            printf("\nIncorrect size\n");
+        }
+    }
+
     if (schr(str, '\\') == -1)
         return -1;
 
@@ -34,15 +47,10 @@ int process(char *str, char *fbs) {
         ((*tokens)[i]).dirs = atom = symcnt (((*tokens)[i]).directs, '\\');
         ((*tokens)[i]).dtoks = (char **)malloc(atom*sizeof(char *));
         stok(((*tokens)[i]).directs, '\\', ((*tokens)[i]).dtoks);
-        // for (int j = 0; j < atom; j++)
-        //     printf("%s\n", ((*tokens)[i]).dtoks[j]);
 
         ((*tokens)[i]).nnodes = atom_2 = symcnt (((*tokens)[i]).node, '.');
         ((*tokens)[i]).ntoks = (char **)malloc(atom_2*sizeof(char *));
         stok(((*tokens)[i]).node, '.', ((*tokens)[i]).ntoks);
-        // printf("ATOM : %d\n", atom_2);
-        // for (int j = 0; j < atom_2; j++)
-        //     printf("%s\n", ((*tokens)[i]).ntoks[j]);
     }
 
     putstring(str, scount);
