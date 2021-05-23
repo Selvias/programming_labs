@@ -31,7 +31,20 @@ void putstring(char *str, int count) {
 }
 //Заполнение структуры токенов
 void divide(char *str, toks **token, int num) {
-    int i = 2;
+    int i = 0;
+
+    ((*token)[num]).protocol[2] = '\0';
+
+    while(i < 2) {
+        if (str[i] == '\\')
+            ((*token)[num]).protocol[i] = str[i];
+        else {
+            printf("Uncorrect protocol : %s\n", str);
+            i = 2;
+            break;
+        }
+        i++;
+    }
     while (str[i] != '\\') {
         ((*token)[num]).node[i - 2] = str[i];
         i++;

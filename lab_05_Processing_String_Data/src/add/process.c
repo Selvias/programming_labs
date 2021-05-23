@@ -18,7 +18,6 @@ int process(char *str, char *fbs) {
         return -1;
 
     stok(str, '+', subst);
-    // printf("Count of substrings : %d\n", scount);
 
     if (schr(str, '\\') == -1)
         return -1;
@@ -26,8 +25,6 @@ int process(char *str, char *fbs) {
     //Заполнение по структуре
     for (int i = 0; i < scount; i++) {
         divide(subst[i], tokens, i);
-        // printf("%s\n", ((*tokens)[i]).node);
-        // printf("%s\n", ((*tokens)[i]).directs);
     }
 
     int atom, atom_2;
@@ -147,7 +144,7 @@ int process(char *str, char *fbs) {
     int nrez = 0;
 
     for (int s = 0; s < scount; s++) {
-        if ((*tokens)[s].flag == 0) {
+        if ((*tokens)[s].flag == 0 && scmp((*tokens)[s].protocol, "\\\\") == 0) {
             if (nrez != 0)
                 printf("+");
             printf("http://");

@@ -12,6 +12,8 @@ typedef struct {
 
     short int flag;
 
+    char protocol[3];
+
     int dirs, nnodes;
 
     char **ntoks;
