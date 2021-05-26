@@ -1,27 +1,30 @@
 #include "addlib.h"
 #include "strings.h"
 
-int process(char *str, char *fbs) {
-
-    char delim;
-    printf("Enter delim : ");
-    scanf("%c", &delim);
-    getchar();
-    printf("\n");
+int process(char *str, char delim, char *fbs) {
 
     //Подсчёт, под какое количество указателей на подстроки необходимо выделить память
     int scount = symcnt (str, delim);
     char **subst = (char **)malloc(scount*sizeof(char *));
 
-    if (subst == NULL)
+    if (subst == NULL) {
+        printf("Memory allocation failure\n");
         return -1;
+    }
 
     toks **tokens = (toks **)malloc(sizeof(toks *));
-    if (tokens == NULL)
+    if (tokens == NULL) {
+        printf("Memory allocation failure\n");
+        free(subst);
         return -1;
+    }
     *tokens = (toks *)malloc(scount * sizeof(toks));
-    if (*tokens == NULL)
+    if (*tokens == NULL) {
+        printf("Memory allocation failure\n");
+        free(subst);
+        free(tokens);
         return -1;
+    }
 
     stok(str, '+', subst);
 
@@ -58,10 +61,36 @@ int process(char *str, char *fbs) {
     for (int i = 0; i < scount; i++) {
         ((*tokens)[i]).dirs = atom = symcnt (((*tokens)[i]).directs, '\\');
         ((*tokens)[i]).dtoks = (char **)malloc(atom*sizeof(char *));
+        if (((*tokens)[i]).dtoks == NULL) {
+            printf("Memory allocation failure\n");
+            for (int mem = 0; mem < i; mem++) {
+                if ((*tokens)[mem].ntoks != NULL)
+                    free((*tokens)[mem].ntoks);
+                if((*tokens)[mem].dtoks != NULL)
+                    free((*tokens)[mem].dtoks);
+            }
+            free(subst);
+            free(*tokens);
+            free(tokens);
+            return -1;
+        }
         stok(((*tokens)[i]).directs, '\\', ((*tokens)[i]).dtoks);
 
         ((*tokens)[i]).nnodes = atom_2 = symcnt (((*tokens)[i]).node, '.');
         ((*tokens)[i]).ntoks = (char **)malloc(atom_2*sizeof(char *));
+        if (((*tokens)[i]).ntoks == NULL) {
+            printf("Memory allocation failure\n");
+            for (int mem = 0; mem < i; mem++) {
+                if ((*tokens)[mem].ntoks != NULL)
+                    free((*tokens)[mem].ntoks);
+                if((*tokens)[mem].dtoks != NULL)
+                    free((*tokens)[mem].dtoks);
+            }
+            free(subst);
+            free(*tokens);
+            free(tokens);
+            return -1;
+        }
         stok(((*tokens)[i]).node, '.', ((*tokens)[i]).ntoks);
     }
 
@@ -158,7 +187,6 @@ int process(char *str, char *fbs) {
     }
 
     //Склейка (Сборка) и вывод форматных строк
-    
     printf("\nResult : ");
 
     int nrez = 0;
@@ -185,6 +213,13 @@ int process(char *str, char *fbs) {
             }
     }
 
+    for (int m = 0; m < scount; m++) {
+        if ((*tokens)[m].ntoks != NULL)
+            free((*tokens)[m].ntoks);
+        if((*tokens)[m].dtoks != NULL)
+            free((*tokens)[m].dtoks);
+    }
+    free(*tokens);
     free(tokens);
     free(subst);
 

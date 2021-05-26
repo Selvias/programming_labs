@@ -24,13 +24,13 @@ typedef struct {
 
 } toks;
 
-int input(char**path);
+int input(char**path, char **delim);
 int symcnt (char *arr, char sym);
 void putstring(char *str, int count);
 
 
 int check(char *str, char *fbs);
-int process(char *str, char *fbs);
+int process(char *str, char delim, char *fbs);
 void divide(char *str, toks **token, int num);
 
 int string_into_number(char *str);
