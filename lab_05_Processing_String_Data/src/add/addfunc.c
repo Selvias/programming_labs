@@ -32,7 +32,7 @@ void putstring(char *str, int count) {
 //Заполнение структуры токенов
 void divide(char *str, toks **token, int num) {
 
-    if ((*token)[num].sizeflag == -1) {
+    if ((*token)[num].sizeflag == -1 || (*token)[num].standardflag == -1) {
         return;
     }
 
@@ -65,7 +65,7 @@ void divide(char *str, toks **token, int num) {
 //Проверка на домен
 int onlyletters(toks *token) {
 
-    if ((*token).sizeflag == -1) {
+    if ((*token).sizeflag == -1 || (*token).standardflag == -1) {
         return -1;
     }
 
@@ -82,7 +82,7 @@ int onlyletters(toks *token) {
 //Проверка на IP
 int onlynumbers(toks *token) {
 
-    if ((*token).sizeflag == -1) {
+    if ((*token).sizeflag == -1 || (*token).standardflag == -1) {
         return -1;
     }
 
@@ -112,6 +112,9 @@ int string_into_number(char *str) {
 
 int checknode(toks *token) {
 
+    if ((*token).sizeflag == -1 || (*token).standardflag == -1)
+        return -1;
+
     if (scmp(token->ntoks[token->nnodes - 1], "com") == 0 || scmp(token->ntoks[token->nnodes - 1], "ru") == 0  || scmp(token->ntoks[token->nnodes - 1], "org") == 0 ) {
         return 0;
     }
@@ -119,6 +122,10 @@ int checknode(toks *token) {
 }
 
 int checkip(toks *token) {
+
+    if ((*token).sizeflag == -1 || (*token).standardflag == -1)
+        return -1;
+
     for (int i = 0; i < token->nnodes; i++) {
         int num = string_into_number((*token).ntoks[i]);
         if (num > 255 || num < 0) {

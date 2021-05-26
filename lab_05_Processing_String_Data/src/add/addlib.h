@@ -11,7 +11,7 @@ enum {
 
 typedef struct {
 
-    short int flag, sizeflag;
+    short int flag, sizeflag, standardflag;
 
     char protocol[3];
 

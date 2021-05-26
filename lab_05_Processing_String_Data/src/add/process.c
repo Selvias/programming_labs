@@ -3,8 +3,14 @@
 
 int process(char *str, char *fbs) {
 
+    char delim;
+    printf("Enter delim : ");
+    scanf("%c", &delim);
+    getchar();
+    printf("\n");
+
     //Подсчёт, под какое количество указателей на подстроки необходимо выделить память
-    int scount = symcnt (str, '+');
+    int scount = symcnt (str, delim);
     char **subst = (char **)malloc(scount*sizeof(char *));
 
     if (subst == NULL)
@@ -24,11 +30,17 @@ int process(char *str, char *fbs) {
         if (size > PATHMAXLEN) {
             (*tokens)[y].sizeflag = -1;
         }
+        else if(subst[y][0] != '\\' || subst[y][1] != '\\') {
+            (*tokens)[y].standardflag = -1;
+        }
     }
 
     for (int y = 0; y < scount; y++) {
         if ((*tokens)[y].sizeflag == -1) {
             printf("\nIncorrect size\n");
+        }
+        else if ((*tokens)[y].standardflag == -1) {
+            printf("Wrong standard\n");
         }
     }
 
